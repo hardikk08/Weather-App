@@ -2,16 +2,19 @@ var weatherApp = angular.module('weatherApp', ['ngRoute']);
 
 weatherApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider){
   $routeProvider
-  .when('/', {
-    templateUrl: 'views/login.html',
-    controller: 'LoginController'
+  .when('/login', {
+    templateUrl: '/views/login.html',
+    controller: 'LoginController',
+    access: {
+    isFree: true
+  }
   })
   .when('/home', {
-    templateUrl: 'views/home.html',
+    templateUrl: '/views/home.html',
     controller:'HomeController'
   })
   .otherwise({
-    redirectTo: "/"
+    redirectTo: '/login'
   });
 
   $locationProvider.html5Mode({
@@ -22,13 +25,10 @@ weatherApp.config(['$routeProvider', '$locationProvider', function($routeProvide
 }]);
 
 weatherApp.run(['$rootScope', '$location', 'userService', function ($rootScope, $location, userService) {
-    $rootScope.$on('$routeChangeStart', function (event, next, current) {
-      console.log(next);
-      console.log(current);
-        if (!userService.isLogged) {
-            console.log('DENY');
+    $rootScope.$on('$routeChangeStart', function (event, prev, current) {
+        if (!prev.access.isFree && !userService.isLogged) {
             event.preventDefault();
-            $location.path('/login');
+            $location.path('/');
         }
     });
 }]);
