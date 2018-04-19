@@ -3,21 +3,13 @@ var weatherApp = angular.module('weatherApp', ['ngRoute']);
 weatherApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider){
   $routeProvider
   .when('/', {
-    templateUrl: 'views/login.html',
+    templateUrl: 'login.html',
     controller: 'LoginController'
   })
   .when('/home', {
-    templateUrl: 'views/home.html',
+    templateUrl: 'home.html',
     controller:'HomeController'
-  })
-  .otherwise({
-    redirectTo: "/"
   });
-
-  $locationProvider.html5Mode({
-  enabled: true,
-  requireBase: false
-});
 
 }]);
 
@@ -30,11 +22,15 @@ weatherApp.run(['$rootScope', '$location', 'userService', function ($rootScope, 
             event.preventDefault();
             $location.path('/login');
         }
+        else {
+            console.log('ALLOW');
+            $location.path('/home');
+        }
     });
 }]);
 
 
-weatherApp.controller('LoginController', function($scope, userService, $location){
+weatherApp.controller('LoginController', function($scope, userService){
   $scope.submit = () => {
     if ('localStorage' in window && window['localStorage'] !== null) {
             localStorage.setItem($scope.email, $scope.password);
@@ -50,7 +46,6 @@ weatherApp.controller('LoginController', function($scope, userService, $location
       console.log("Match");
       userService.isLogged = true;
       userService.username = $scope.email;
-      $location.path('/home');
     }
     else{
       userService.isLogged = false;
