@@ -5,8 +5,14 @@ weatherApp.controller('historyController', function($scope, $rootScope, userServ
     let history = $cookies.get($scope.cookies);
     $scope.splits = history.split(',');
   }
+  
   $scope.historySearch = (item) => {
     userService.cityName = item;
     $location.path('/weather');
+  };
+
+  $scope.logout = () => {
+    $cookies.remove('username');
+    $location.path('/login');
   };
 });
