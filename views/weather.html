@@ -25,7 +25,7 @@
 </div>
 <div class = "row">
     <div class = "col-12 text-center">
-      <h1 class="display-4">Weather for {{city}}</h1>
+      <h1 class="display-4">Weather for {{city}}, {{weather.country}}</h1>
     </div>
   </div>
   <br>
@@ -46,8 +46,8 @@
               <div class="card-body flex-fill text-center">
                   <h5 class="card-title">Temperature</h5>
                   <p class="card-text">Current Temperature: {{(weather.temp) - 273.15 | number : 2}} °C</p>
-                  <p class="card-text">Max Temperature: {{(weather.max) - 273.15}} °C</p>
-                  <p class="card-text">Min Temperature: {{(weather.min) - 273.15}} °C</p>
+                  <p class="card-text">Max Temperature: {{(weather.max) - 273.15 | number : 2}} °C</p>
+                  <p class="card-text">Min Temperature: {{(weather.min) - 273.15 | number : 2}} °C</p>
               </div>
           </div>
       </div>
