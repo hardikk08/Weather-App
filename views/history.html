@@ -10,7 +10,10 @@
   <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
     <ul class="navbar-nav ml-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="/history">History <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="/home">Home <span class="sr-only"></span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="#">History <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link btn btn-outline-danger my-2 my-sm-0" href="#" ng-click = 'logout()'>Logout</a>
@@ -20,25 +23,16 @@
 </nav>
 </div>
 </div>
-<br>
-<br>
-<br>
 <div class = "row">
     <div class = "col-12 text-center">
-      <h1 class="display-3">Hi, {{cookies}}</h1>
-      <p class="lead">
-      Please add a city or check history for past searched cities!
-    </p>
-    <br>
-    <input type = "text" ng-model = "mancity"> <button type="button" class = "btn btn-default" name="button" ng-click = 'manlocation()'> Select </button>
-
-    <p class="lead">
-    <br>
-    *Please enter your city name <br>
-    <b>OR you can use the awesome Auto-detect Feature!</b>
-    </p>
-    <br>
-    <button type="button" class = "btn btn-default btn-md" ng-click = "location()"> Auto Detect Location</button>
+      <h1 class="display-4">Hi {{cookies}}, these were your past searches!</h1>
     </div>
+  </div>
+  <br>
+  <br>
+  <div class="row">
+    <div class="list-group col-lg-4 col-md-12 col-sm-12 absolute-center">
+  <a class="list-group-item list-group-item-action" ng-repeat = "item in splits" ng-click = "historySearch(item)">{{ item | unique}}</a>
 </div>
+  </div>
 </div>

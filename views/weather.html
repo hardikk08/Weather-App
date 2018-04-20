@@ -13,7 +13,7 @@
         <a class="nav-link" href="/home">Home <span class="sr-only"></span></a>
       </li>
       <li class="nav-item active">
-        <a class="nav-link" href="#">History <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="/history">History <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link btn btn-outline-danger my-2 my-sm-0" href="#" ng-click = 'logout()'>Logout</a>
@@ -45,7 +45,7 @@
             <img class="card-img-top" src="images/temp.jpg" alt="Card image cap">
               <div class="card-body flex-fill text-center">
                   <h5 class="card-title">Temperature</h5>
-                  <p class="card-text">Current Temperature: {{(weather.temp) - 273.15}} °C</p>
+                  <p class="card-text">Current Temperature: {{(weather.temp) - 273.15 | number : 2}} °C</p>
                   <p class="card-text">Max Temperature: {{(weather.max) - 273.15}} °C</p>
                   <p class="card-text">Min Temperature: {{(weather.min) - 273.15}} °C</p>
               </div>
