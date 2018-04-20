@@ -1,4 +1,4 @@
-weatherApp.factory('userService', function(){
+weatherApp.service('userService', function(){
   return{
     isLogged: false,
     username: ''
