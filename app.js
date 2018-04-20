@@ -66,8 +66,6 @@ weatherApp.controller('LoginController', function($scope, userService, $location
       $location.path('/home');
     }
     else{
-      // userService.isLogged = false;
-      // userService.username = '';
       alert("Invalid Credentials");
     }
 }
@@ -84,7 +82,7 @@ weatherApp.controller('HomeController', function($scope, userService, $location,
     var promise = geoLocation.getLocation().then(function (d) {
       return d;
     });
-    promise.then(function(x){ 
+    promise.then(function(x){
       $scope.city = x.city;
       userService.username = $scope.username;
       userService.cityName = $scope.city;
@@ -138,5 +136,8 @@ console.log(weather);
     windspeed: weather.wind.speed
   };
 
-  console.log($scope.weather);
+  $scope.logout = () => {
+    $cookies.remove('username');
+    $location.path('/login');
+  };
 });
