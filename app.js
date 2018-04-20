@@ -77,14 +77,10 @@ weatherApp.controller('HomeController', function($scope, userService, $location,
 
     $scope.location = () => {
     var promise = geoLocation.getLocation().then(function (d) {
-      return d.data;
+      return d;
     });
     promise.then(function(x){
-      $scope.data = {
-        city: x.city,
-        lat: x.lat,
-        lon: x.lon
-      };
+      $scope.city = x.city;
 
       const appid = '04901d78b19fe8f31e36511c49dc0961';
       const url = "https://api.openweathermap.org/data/2.5/weather?q=" + $scope.city + "&appid=" + appid;
@@ -95,7 +91,7 @@ weatherApp.controller('HomeController', function($scope, userService, $location,
         console.log("error");
       });
     });
-    $scope.data.city = '';
+    // $scope.data.city = '';
   };
 
   $scope.logout = () => {

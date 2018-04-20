@@ -24,20 +24,21 @@
 <br>
 <br>
 <div class = "row">
-<div class = "col-6" style="padding-left : 30px;">
-  <h1 class="display-3">Hi, {{cookies}}</h1>
-  <p class="lead">
-  Please add a city or check history for past searched cities!
-</p>
-<input type = "text" ng-model = "city"> <button type="button" class = "btn btn-default" name="button" ng-click = 'manuallocation()'> Select </button>
-<p class="lead">
-*Please enter your city name!
-</p>
-<button type="button" class = "btn btn-default btn-md" ng-click = "location()"> Auto Detect Location</button>
-</div>
+    <div class = "col-12 text-center">
+      <h1 class="display-3">Hi, {{cookies}}</h1>
+      <p class="lead">
+      Please add a city or check history for past searched cities!
+    </p>
+    <br>
+    <input type = "text" ng-model = "city"> <button type="button" class = "btn btn-default" name="button" ng-click = 'manuallocation()'> Select </button>
 
-<div class="col-6">
-  <h1 class="display-3">{{data.city }} </h1>
-</div>
+    <p class="lead">
+    <br>
+    *Please enter your city name <br>
+    <b>OR you can use the awesome Auto-detect Feature!</b>
+    </p>
+    <br>
+    <button type="button" class = "btn btn-default btn-md" ng-click = "location()"> Auto Detect Location</button>
+    </div>
 </div>
 </div>
