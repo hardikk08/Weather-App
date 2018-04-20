@@ -25,14 +25,15 @@
 </div>
 <div class = "row">
     <div class = "col-12 text-center">
-      <h1 class="display-4">Hi {{cookies}}, these were your past searches!</h1>
+      <h1 ng-if = "historyExists" class="display-4">Hi {{cookies}}, these were your past searches!</h1>
+      <h1 ng-if = "!historyExists" class="display-4">Oh, you don't care about the weather :(</h1>
     </div>
   </div>
   <br>
   <br>
   <div class="row">
     <div class="list-group col-lg-4 col-md-12 col-sm-12 absolute-center">
-  <a class="list-group-item list-group-item-action" ng-repeat = "item in splits" ng-click = "historySearch(item)">{{ item | unique}}</a>
+  <a class="list-group-item list-group-item-action" ng-repeat = "item in splits track by $index" ng-click = "historySearch(item)">{{item}}</a>
 </div>
   </div>
 </div>

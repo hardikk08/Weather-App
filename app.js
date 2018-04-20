@@ -46,14 +46,18 @@ weatherApp.controller('LoginController', function($scope, userService, $location
   }
 
   $scope.submit = () => {
-    if ('localStorage' in window && window['localStorage'] !== null) {
-      if(($scope.username && $scope.password !== undefined || null)) {
+    if (localStorage) {
+      if($scope.username && $scope.password) {
             localStorage.setItem($scope.username, $scope.password);
             $scope.username = "";
             $scope.password = "";
             alert("You have registered, Please login!");
           }
-          else alert("You have either forgotten username or password");
+          else {
+            alert("Please set both, username and password!");
+            $scope.username = "";
+            $scope.password = "";
+          }
   }
 };
   $scope.login = () => {
@@ -62,7 +66,9 @@ weatherApp.controller('LoginController', function($scope, userService, $location
     var key = localStorage.key(i);
     var value = localStorage[key];
     if(key === $scope.username && value === $scope.password){
-      $cookies.put('username', $scope.username);
+      var expireDate = new Date();
+      expireDate.setDate(expireDate.getDate() + 100);
+      var cookie = $cookies.put('username', $scope.username, {'expires': expireDate});
       $location.path('/home');
       isFound = true;
         }
@@ -77,6 +83,8 @@ weatherApp.controller('LoginController', function($scope, userService, $location
 
 weatherApp.controller('HomeController', function($scope, userService, $location, $cookies, geoLocation, $http, $rootScope){
   $scope.cookies = $cookies.get('username');
+  var expireDate = new Date();
+  expireDate.setDate(expireDate.getDate() + 100);
 //Auto detect
     $scope.location = () => {
     var promise = geoLocation.getLocation().then(function (d) {
@@ -85,6 +93,14 @@ weatherApp.controller('HomeController', function($scope, userService, $location,
     promise.then(function(x){
       $scope.city = x.city;
       userService.cityName = $scope.city;
+      $scope.history = $cookies.get($scope.cookies);
+      if(!$scope.history){
+        $cookies.put($scope.cookies, $scope.city, {'expires': expireDate});
+      }
+      else{
+        let pastSearch = $scope.history + ',' + $scope.city;
+        $cookies.put($scope.cookies, pastSearch, {'expires': expireDate});
+      }
         $location.path('/weather');
     });
   };
@@ -92,13 +108,12 @@ weatherApp.controller('HomeController', function($scope, userService, $location,
   $scope.manlocation = () => {
     userService.cityName = $scope.mancity;
     $scope.history = $cookies.get($scope.cookies);
-    console.log($scope.history);
     if(!$scope.history){
-      $cookies.put($scope.cookies, $scope.city);
+      $cookies.put($scope.cookies, $scope.mancity, {'expires': expireDate});
     }
     else{
-      let pastSearch = $scope.history + ',' + $scope.city;
-      $cookies.put($scope.cookies, pastSearch);
+      let pastSearch = $scope.history + ',' + $scope.mancity;
+      $cookies.put($scope.cookies, pastSearch, {'expires': expireDate});
     }
        $location.path('/weather');
 };
@@ -113,12 +128,13 @@ weatherApp.controller('HomeController', function($scope, userService, $location,
 
 weatherApp.controller('weatherController', function($scope, $rootScope, userService, $cookies, $location, $http){
   $scope.city = userService.cityName;
+  var expireDate = new Date();
+  expireDate.setDate(expireDate.getDate() + 100);
   const appid = '04901d78b19fe8f31e36511c49dc0961';
   const url = "https://api.openweathermap.org/data/2.5/weather?q=" + $scope.city + "&appid=" + appid;
   $http.get(url).then(function(response){
     userService.weatherInfo = response.data;
       let weather = userService.weatherInfo;
-    console.log(weather, 'weather');
       $scope.weather = {
         temp: weather.main.temp,
         max: weather.main.temp_max,
@@ -127,8 +143,20 @@ weatherApp.controller('weatherController', function($scope, $rootScope, userServ
         winddegree: weather.wind.deg,
         windspeed: weather.wind.speed
       };
-  }, function(response){
-    console.log("error");
+  }, function(error){
+    alert("This must be the city of your dreams, please try again");
+    $scope.cookies = $cookies.get('username');
+    console.log($scope.cookies, 'username');
+    $scope.history = $cookies.get($scope.cookies);
+    console.log($scope.history, 'history');
+    if($scope.history){
+      let history = $cookies.get($scope.cookies);
+      console.log(history, 'history');
+      var splits = history.split(',');
+      let newHistory = splits.slice(0,-1);
+      $cookies.put($scope.cookies, newHistory, {'expires': expireDate});
+      debugger;
+    }
   });
 
 
@@ -139,11 +167,13 @@ weatherApp.controller('weatherController', function($scope, $rootScope, userServ
 });
 
 
-weatherApp.controller('historyController', function($scope, $rootScope, userService, $cookies, $location, unique){
+weatherApp.controller('historyController', function($scope, $rootScope, userService, $cookies, $location){
   $scope.cookies = $cookies.get('username');
-  let history = $cookies.get($scope.cookies);
-  $scope.splits = history.split(',');
-
+  $scope.historyExists = $cookies.get($scope.cookies);
+  if($scope.historyExists){
+    let history = $cookies.get($scope.cookies);
+    $scope.splits = history.split(',');
+  }
   $scope.historySearch = (item) => {
     userService.cityName = item;
     $location.path('/weather');
