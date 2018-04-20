@@ -13,6 +13,10 @@ weatherApp.config(['$routeProvider', '$locationProvider', function($routeProvide
     templateUrl: '/views/home.html',
     controller:'HomeController'
   })
+  .when('/weather', {
+    templateUrl: '/views/weather.html',
+    controller: 'weatherController'
+  })
   .otherwise({
     redirectTo: '/login'
   });
@@ -62,40 +66,77 @@ weatherApp.controller('LoginController', function($scope, userService, $location
       $location.path('/home');
     }
     else{
-      userService.isLogged = false;
-      userService.username = '';
+      // userService.isLogged = false;
+      // userService.username = '';
+      alert("Invalid Credentials");
     }
 }
 };
 
 });
 
-weatherApp.controller('HomeController', function($scope, userService, $location, $cookies, geoLocation, $http){
+//Home Page controller
+
+weatherApp.controller('HomeController', function($scope, userService, $location, $cookies, geoLocation, $http, $rootScope){
   $scope.cookies = $cookies.get('username');
-
-    //HTML5 geoLocation is deprecated for non secure http servers hence using another location api service!
-
+//Auto detect
     $scope.location = () => {
     var promise = geoLocation.getLocation().then(function (d) {
       return d;
     });
-    promise.then(function(x){
+    promise.then(function(x){ 
       $scope.city = x.city;
-
+      userService.username = $scope.username;
+      userService.cityName = $scope.city;
+      $location.path('/weather');
       const appid = '04901d78b19fe8f31e36511c49dc0961';
       const url = "https://api.openweathermap.org/data/2.5/weather?q=" + $scope.city + "&appid=" + appid;
-      console.log(url);
       $http.get(url).then(function(response){
-        console.log(response);
+        userService.weatherInfo = response.data;
       }, function(response){
         console.log("error");
       });
     });
-    // $scope.data.city = '';
   };
+//User enters city
+  $scope.manlocation = () => {
+    $scope.city = $scope.mancity;
+    userService.cityName = $scope.city;
+    const appid = '04901d78b19fe8f31e36511c49dc0961';
+    const url = "https://api.openweathermap.org/data/2.5/weather?q=" + $scope.city + "&appid=" + appid;
+    $http.get(url).then(function(response){
+      userService.weatherInfo = response.data;
+      $location.path('/weather');
+    }, function(response){
+      console.log("error");
+    });
 
+};
+//Logout function
   $scope.logout = () => {
     $cookies.remove('username');
     $location.path('/login');
   };
+});
+
+//Weather Page controller
+
+weatherApp.controller('weatherController', function($scope, $rootScope, userService){
+  $scope.city = userService.cityName;
+  let weather = userService.weatherInfo;
+console.log(weather);
+  function getweather(){
+    return console.log("hello");
+  };
+
+  $scope.weather = {
+    temp: weather.main.temp,
+    max: weather.main.temp_max,
+    min: weather.main.temp_min,
+    weat: weather.weather[0].main,
+    winddegree: weather.wind.deg,
+    windspeed: weather.wind.speed
+  };
+
+  console.log($scope.weather);
 });
